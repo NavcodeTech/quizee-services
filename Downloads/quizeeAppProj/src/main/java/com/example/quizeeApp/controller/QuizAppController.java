@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.quizeeApp.entity.QuestionDetails;
@@ -35,5 +36,17 @@ public class QuizAppController {
 	@GetMapping("/getQuizDetails/{requestedCategory}")
 	public List<QuizDetails> getQuizDetailsByCategory(@PathVariable("requestedCategory") String category) {
 		return service.getQuizDetailsList(category);
+	}
+	
+	@GetMapping("/filterQuizDetails")
+	public List<QuizDetails> getFilteredQuizDetailsByCategory(@RequestParam(value="category", required=false) String category,
+			 @RequestParam(value="createdBy", required=false) String createdBy, @RequestParam(value="title",required=false) String title) {
+		return service.getFilteredQuizDetailsList(category, createdBy, title);
+	}
+	
+	@GetMapping("/updateQuizDetails")
+	public String updateQuizDetailsById(@RequestParam(value="quizDetailsId", required=true) String quizDetailsId,
+			 @RequestParam(value="updatedTitle", required=true) String updatedTitle) {
+		return service.updateQuizDetails(quizDetailsId, updatedTitle);
 	}
 }

@@ -40,4 +40,26 @@ public class QuizAppService {
         }
         return quizDetails;
 	}
+	
+	@Transactional
+	public List<QuizDetails> getFilteredQuizDetailsList(String category, String createdBy, String title) {
+		System.out.println("filtering"+category);
+		List<QuizDetails> quizDetails = quizDetailsRepo.findByOptionalColumns(category, createdBy, title);
+        if (quizDetails.isEmpty()) {
+            throw new MyBusinessException("No quizzes found for given filtered criteria: " + category);
+        }
+        return quizDetails;
+	}
+	
+	public String updateQuizDetails(String id, String updatedTitle) {
+		QuizDetails q= quizDetailsRepo.findById(Integer.valueOf(id)).get();
+		if (q.equals(null)) {
+			return "Quiz can't be updated";
+		} else {
+		   q.setTitle(updatedTitle);
+		   quizDetailsRepo.save(q);
+		   return "Updated Successfully";
+		}
+	}
+	
 }

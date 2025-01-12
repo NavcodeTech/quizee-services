@@ -13,4 +13,13 @@ import com.example.quizeeApp.entity.QuizDetails;
 public interface QuizDetailsRepository extends JpaRepository<QuizDetails,Integer>{
 	@Query("SELECT q FROM QuizDetails q LEFT JOIN FETCH q.questionList WHERE q.category = :category")
     List<QuizDetails> findByCategoryWithQuestions(@Param("category") String category);
+	
+	@Query("SELECT distinct q FROM QuizDetails q LEFT JOIN FETCH q.questionList " +
+		       "WHERE (:category IS NULL OR :category = '' OR q.category = :category) " +
+		       "AND (:title IS NULL OR :title = '' OR q.title = :title) " +
+		       "AND (:createdBy IS NULL OR :createdBy = '' OR q.createdBy = :createdBy)")
+    List<QuizDetails> findByOptionalColumns(@Param("category") String category,
+    		@Param("createdBy") String createdBy, @Param("title") String title);
+	
+	QuizDetails findById(int id);
 }
