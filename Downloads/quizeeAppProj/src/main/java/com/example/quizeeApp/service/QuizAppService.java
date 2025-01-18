@@ -51,12 +51,23 @@ public class QuizAppService {
         return quizDetails;
 	}
 	
-	public String updateQuizDetails(String id, String updatedTitle) {
+	public String updateQuizDetailsTitle(String id, String updatedTitle) {
+		
 		QuizDetails q= quizDetailsRepo.findById(Integer.valueOf(id)).get();
 		if (q.equals(null)) {
 			return "Quiz can't be updated";
 		} else {
 		   q.setTitle(updatedTitle);
+		   quizDetailsRepo.save(q);
+		   return "Updated Successfully";
+		}
+	}
+	
+	public String updateQuizDetails(QuizDetails q) {
+		QuizDetails qd= quizDetailsRepo.findById(q.getId());
+		if (qd.equals(null)) {
+			throw new MyBusinessException("Quiz can't be updated");
+		} else {
 		   quizDetailsRepo.save(q);
 		   return "Updated Successfully";
 		}
