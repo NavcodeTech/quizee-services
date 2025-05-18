@@ -42,16 +42,16 @@ public class QuestionDetails {
 	@Type(type ="json")
 	@Column(columnDefinition = "JSON")
 	private String[] correctAnswer;
-	
+	private int marks;
+	private int negativeMarks;
+
 	@Override
-    public String toString() {
-        return "QuestionDetails{" +
-               "questionId=" + questionId +
-               ", questionText='" + questionText + '\'' +
-               ", questionType='" + questionType + '\'' +
-               ", points=" + points +
-               ", options=" + Arrays.toString(options) +
-               ", correctAnswer=" + Arrays.toString(correctAnswer) +
-               '}';
-    }
+	public String toString() {
+		return "QuestionDetails [questionId=" + questionId + ", quizDetails=" + quizDetails + ", questionText="
+				+ questionText + ", questionType=" + questionType + ", points=" + points + ", options="
+				+ Arrays.toString(options) + ", correctAnswer=" + Arrays.toString(correctAnswer) + ", marks=" + marks
+				+ ", negativeMarks=" + negativeMarks + "]";
+	}
+	
+	
 }

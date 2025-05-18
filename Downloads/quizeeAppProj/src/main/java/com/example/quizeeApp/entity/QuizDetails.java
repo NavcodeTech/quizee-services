@@ -40,24 +40,18 @@ public class QuizDetails {
 	@Column(columnDefinition = "TINYINT(1)")
 	private boolean randomizeQuestion;
 	private int maxAttempts;
+	private int fullMarks;
 	@OneToMany(mappedBy = "quizDetails", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
 	@Type(type = "json", parameters = @org.hibernate.annotations.Parameter(name = "json_class", value = "com.example.quizeeApp.entity.QuestionDetails"))
 	private List<QuestionDetails> questionList = new ArrayList<QuestionDetails>();
-    
 	@Override
-    public String toString() {
-        return "QuizDetails{" +
-               "id=" + id +
-               ", title='" + title + '\'' +
-               ", description='" + description + '\'' +
-               ", category='" + category + '\'' +
-               ", createdBy='" + createdBy + '\'' +
-               ", questionPublished=" + questionPublished +
-               ", timeLimit=" + timeLimit +
-               ", randomizeQuestion=" + randomizeQuestion +
-               ", maxAttempts=" + maxAttempts +
-               '}';
-    }
+	public String toString() {
+		return "QuizDetails [id=" + id + ", title=" + title + ", description=" + description + ", category=" + category
+				+ ", createdBy=" + createdBy + ", questionPublished=" + questionPublished + ", timeLimit=" + timeLimit
+				+ ", randomizeQuestion=" + randomizeQuestion + ", maxAttempts=" + maxAttempts + ", fullMarks="
+				+ fullMarks + "]";
+	}
+    
 	
 }

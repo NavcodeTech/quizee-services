@@ -2,6 +2,7 @@ package com.example.quizeeApp.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +19,7 @@ import com.example.quizeeApp.entity.ErrorResponse;
 import com.example.quizeeApp.entity.QuestionDetails;
 import com.example.quizeeApp.entity.QuizDetails;
 import com.example.quizeeApp.exception.MyBusinessException;
+import com.example.quizeeApp.service.AuthValidatorService;
 import com.example.quizeeApp.service.QuizAppService;
 
 @RestController
@@ -24,6 +27,8 @@ public class QuizAppController {
 	
 	@Autowired
 	QuizAppService service;
+	@Autowired
+	AuthValidatorService authValidatorService;
 	
 	@PostMapping("/addQuestion")
 	public QuestionDetails addQuestion(@RequestBody QuestionDetails questionDetails)
@@ -32,13 +37,21 @@ public class QuizAppController {
 	}
 	
 	@PostMapping("/addQuizData")
-	public ResponseEntity<ErrorResponse> addQuizData(@RequestBody QuizDetails quizDetails)
+	public ResponseEntity<ErrorResponse> addQuizData(@RequestHeader("Authorization") String authHeader,
+			@RequestBody QuizDetails quizDetails)
 	{
-		// System.out.println("controller"+quizDetails);
+		System.out.println("controller"+quizDetails);
 		try {
-			service.addQuizDetails(quizDetails);
-			ErrorResponse resp = new ErrorResponse(HttpStatus.OK, "Added Quiz Details Successfully");
-			return new ResponseEntity<>(resp, HttpStatus.OK);
+			String token = authHeader.replace("Bearer ", "");
+	        Map<String, Object> userInfo = authValidatorService.validateToken(token);
+	        if (userInfo == null) {
+	        	ErrorResponse resp = new ErrorResponse(HttpStatus.FORBIDDEN, "Not authorized to create quizzes");
+	            return new ResponseEntity<>(resp, HttpStatus.FORBIDDEN);
+	        } else {
+				service.addQuizDetails(quizDetails);
+				ErrorResponse resp = new ErrorResponse(HttpStatus.OK, "Added Quiz Details Successfully");
+				return new ResponseEntity<>(resp, HttpStatus.OK);
+	        }
 		} catch (MyBusinessException e) {
 			ErrorResponse resp = new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 			return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
