@@ -48,7 +48,8 @@ public class QuizAppController {
 	        	ErrorResponse resp = new ErrorResponse(HttpStatus.FORBIDDEN, "Not authorized to create quizzes");
 	            return new ResponseEntity<>(resp, HttpStatus.FORBIDDEN);
 	        } else {
-				service.addQuizDetails(quizDetails);
+
+	        	service.addQuizDetails(quizDetails);
 				ErrorResponse resp = new ErrorResponse(HttpStatus.OK, "Added Quiz Details Successfully");
 				return new ResponseEntity<>(resp, HttpStatus.OK);
 	        }
@@ -97,6 +98,17 @@ public class QuizAppController {
 		} catch (MyBusinessException e) {
 			ErrorResponse er = new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 			return new ResponseEntity<>(er, HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+			ErrorResponse er = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+			return new ResponseEntity<>(er, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping("/getBulkQuizData")
+	public ResponseEntity<Object> getBulkQuizDetails() {
+		try {
+			List<QuizDetails> li = service.getBulkQuizDetails();
+			return new ResponseEntity<>(li, HttpStatus.OK);
 		} catch (Exception e) {
 			ErrorResponse er = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
 			return new ResponseEntity<>(er, HttpStatus.INTERNAL_SERVER_ERROR);

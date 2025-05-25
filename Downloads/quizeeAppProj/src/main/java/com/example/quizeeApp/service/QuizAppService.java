@@ -49,6 +49,11 @@ public class QuizAppService {
             throw new MyBusinessException("No quizzes found for given filtered criteria: " + category);
         }
         return quizDetails;
+	} 
+	
+	public List<QuizDetails> getBulkQuizDetails() {
+		List<QuizDetails> quizDetails = quizDetailsRepo.findAll();
+        return quizDetails;
 	}
 	
 	public String updateQuizDetailsTitle(String id, String updatedTitle) {
